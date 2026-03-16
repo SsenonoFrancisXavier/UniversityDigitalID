@@ -1,7 +1,5 @@
 package ug.ac.ndejje.universitydigitalid
 
-//add a border to the image
-//for watermark images
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -17,6 +15,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +35,6 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import androidx.compose.ui.graphics.Color as ComposeColor
-
 
 class MainActivity : ComponentActivity() {
 
@@ -82,8 +81,10 @@ fun StudentHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(130.dp)
+            .height(150.dp)
+            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
     ) {
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,7 +98,7 @@ fun StudentHeader() {
             modifier = Modifier
                 .size(90.dp)
                 .align(Alignment.TopStart)
-                .offset(x = 16.dp, y = 30.dp)
+                .offset(x = 16.dp, y = 16.dp)
                 .clip(CircleShape)
                 .background(ComposeColor.White)
                 .padding(6.dp)
@@ -112,7 +113,6 @@ fun StudentHeader() {
                 .offset(x = (-16).dp, y = 16.dp)
         )
 
-
         Image(
             painter = studentPhoto,
             contentDescription = "Student Photo",
@@ -120,6 +120,7 @@ fun StudentHeader() {
             modifier = Modifier
                 .size(130.dp)
                 .align(Alignment.BottomCenter)
+                .offset(y = 8.dp)
                 .clip(CircleShape)
                 .border(4.dp, ComposeColor(0xFF8B1E1E), CircleShape)
         )
@@ -138,20 +139,21 @@ fun StudentDetails() {
 
         Text(
             text = stringResource(R.string.student_name),
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.headlineSmall
         )
 
         Spacer(modifier = Modifier.height(6.dp))
+
         Row {
             Text(
-                text = "Programme:",
-                fontSize = 16.sp
-            )
-            Text(
-                text = stringResource(R.string.programme),
+                text = "Programme: ",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = stringResource(R.string.programme),
+                fontSize = 14.sp
             )
         }
 
@@ -160,38 +162,18 @@ fun StudentDetails() {
         Row {
             Text(
                 text = "Registration Number: ",
-                fontSize = 16.sp
-            )
-            Text(
-                text = stringResource(R.string.reg_number),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Row {
-
-            Text(
-                text = "Date of Issue: ",
-                fontSize = 14.sp
-            )
-            Text(
-                text = "01/02/2026",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.width(16.dp))
-
             Text(
-                text = "Expiry Date: 01/02/2029",
+                text = stringResource(R.string.reg_number),
                 fontSize = 14.sp
             )
         }
     }
 }
+
 
 @Composable
 fun BarcodeSection() {
@@ -209,13 +191,66 @@ fun BarcodeSection() {
 }
 
 @Composable
+fun FooterSection() {
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        Row {
+
+            Text(
+                text = "Date of Issue: ",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = "01/02/2026",
+                fontSize = 14.sp
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text = "Expiry Date: ",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = "01/02/2029",
+                fontSize = 14.sp
+            )
+        }
+
+        BarcodeSection()
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(12.dp)
+                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+                .background(ComposeColor(0xFF8B1E1E))
+        )
+    }
+}
+
+@Composable
 fun StudentIdCard() {
 
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
+
         shape = RoundedCornerShape(16.dp),
+
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 8.dp
+        ),
+
         colors = CardDefaults.elevatedCardColors()
     ) {
 
@@ -245,20 +280,24 @@ fun StudentIdCard() {
                 )
             }
 
-            Column{
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
 
                 StudentHeader()
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-                StudentDetails()
+                    StudentDetails()
 
-                BarcodeSection()
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(12.dp)
-                        .background(ComposeColor(0xFF8B1E1E))
-                )
+                    FooterSection()
+                }
             }
         }
     }
